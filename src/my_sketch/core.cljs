@@ -24,17 +24,22 @@
       []
       (let [
             startPoint (rand-nth building-start-point)
-            heightWidth (rand-nth building-height-width)
+            heightWidth building-height-width
             ]
            {:x      (:x startPoint)
             :y      (:y startPoint)
             :width  (:width heightWidth)
             :height (:height heightWidth)}))
 
+(defn create-stars
+      []
+      {:x (rand-int 800) :y (rand-int 150)})
+
 (defn setup []
       (q/frame-rate 20)
       {:points    (take 100 (repeatedly create-spark))
        :buildings (take 50 (repeatedly create-building))
+       :stars (take 80 (repeatedly create-stars))
        :cycle     3})
 
 (defn colors [lifetime]
@@ -68,11 +73,18 @@
       (q/fill 220 220 220)
       (q/ellipse 650 250 50 50))
 
-(defn draw-state [{:keys [points buildings]}]
+(defn draw-stars
+      [{:keys [x y]}]
+      (q/fill 220 220 220)
+      (q/ellipse x y 2 2))
+
+(defn draw-state [{:keys [points buildings stars]}]
       (doseq [building buildings]
              (draw-buildings building))
       (doseq [point points]
              (draw-pipe point))
+      (doseq [star stars]
+             (draw-stars star))
       (draw-moon))
 
 (defn add-spark-at-end-of-cycle
